@@ -1,0 +1,62 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>{% block title %}My shop{% endblock %}</title>
+    <link href="{% static "css/base.css" %}" rel="stylesheet">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-dark">
+    <div class="container">
+        <a href="/" class="navbar-text">SMART BUY</a>
+
+        <ul class="navbar-nav">
+            {% if request.user.is_authenticated %}
+                <li class="navbar-item ml-auto">
+                    <span>{{ request.user.username }}</span>
+                </li>
+                <li>
+                    <a href="{% url 'logout' %}">Logout</a>
+                </li>
+            {% else %}
+                <li class="navbar-item ml-auto">
+                    <a class="navbar-link" href="{% url 'login' %}">Sign in</a>
+                </li>
+                <li class="navbar-item ml-auto">
+                    <a class="navbar-link" href="{% url 'signup' %}">Sign up</a>
+                </li>
+            {% endif %}
+        </ul>
+        <!--        -->
+        <!--        <a href="{% url 'signup' %}">Sign up</a>-->
+        <!--        <a href="{% url 'login' %}">Sign in</a>-->
+    </div>
+    <div id="subheader">
+        <div class="cart">{% with total_items=cart|length %}
+            {% if cart|length > 0 %}
+                Your cart:
+                <a href="{% url "cart:cart_detail" %}">
+                    {{ total_items }} item{{ total_items|pluralize }},
+                    ${{ cart.get_total_price }}
+                </a>
+            {% else %}
+                Your cart is empty.
+            {% endif %}
+        {% endwith %}</div>
+
+        <form class="form-inline my-2 my-lg-0" action="{% url 'main:product_list' %}" method="get">
+            <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search" name="q" >
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
+    </div>
+</nav>
+
+<div id="content">
+    {% block content %}{% endblock %}
+
+
+</div>
+</body>
+</html>
+
